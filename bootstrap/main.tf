@@ -33,6 +33,8 @@ resource "aws_s3_bucket_versioning" "tf_state_versioning" {
   }
 }
 
+## This resource is used to create a DynamoDB table for state locking.
+## It has been deprecated in favor of using s3 resource locking directly.
 resource "aws_dynamodb_table" "tf_state_lock" {
   name         = "terraform-state-lock"
   billing_mode = "PAY_PER_REQUEST"
@@ -47,6 +49,6 @@ resource "aws_dynamodb_table" "tf_state_lock" {
     Name = "Terraform State Lock Table"
   }
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
