@@ -18,3 +18,21 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "environment" {
+  description = "Environment for the resources (e.g., dev, staging, prod)"
+  type        = string
+  default     = "Osiris"
+}
+
+variable "resource_group" {
+  description = "Resource group for the resources"
+  type        = string
+  default     = "public"
+}
+
+variable "availability_zones" {
+  description = "List of availability zones for the subnets"
+  type        = list(string)
+  default     = ["eu-north-1a", "eu-north-1b", "eu-north-1c"]
+}
