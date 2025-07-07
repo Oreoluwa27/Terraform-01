@@ -1,38 +1,43 @@
-variable "vpc_cidr" {
-  description = "CIDR block for the VPC"
-  type        = string
-}
-
-variable "public_subnet_cidrs" {
-  description = "List of CIDRs for public subnets"
-  type        = list(string)
-}
-
-variable "private_subnet_cidrs" {
-  description = "List of CIDRs for private subnets"
-  type        = list(string)
-}
-
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-  default     = {}
-}
+# modules/network/variables.tf
 
 variable "environment" {
-  description = "Environment for the resources (e.g., dev, staging, prod)"
+  description = "The name of the environment (e.g., dev, prod)."
   type        = string
-  default     = "Osiris"
 }
 
-variable "resource_group" {
-  description = "Resource group for the resources"
+variable "vpc_cidr" {
+  description = "The CIDR block for the VPC."
   type        = string
-  default     = "public"
 }
 
-variable "availability_zones" {
-  description = "List of availability zones for the subnets"
+variable "subnets" {
+  description = "A map defining the VPC subnets with their CIDR, type, and AZ."
+  type = map(object({
+    cidr_block              = string
+    type                    = string # "public" or "private"
+    availability_zone       = string
+    map_public_ip_on_launch = optional(bool, false) # For public subnets
+  }))
+}
+
+variable "create_nat_gateway" {
+  description = "Boolean to control if a NAT Gateway should be created."
+  type        = bool
+  default     = true
+}
+
+variable "ssh_ingress_cidrs" {
+  description = "List of CIDR blocks that are allowed to SSH into resources using the default SG."
   type        = list(string)
-  default     = ["eu-north-1a", "eu-north-1b", "eu-north-1c"]
+}
+
+variable "web_ingress_cidrs" {
+  description = "List of CIDR blocks that are allowed HTTP/HTTPS access into resources using the default SG."
+  type        = list(string)
+}
+
+variable "default_tags" {
+  description = "A map of default tags to apply to all resources created by this module."
+  type        = map(string)
+  default     = {}
 }
