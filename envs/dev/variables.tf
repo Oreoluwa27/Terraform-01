@@ -6,7 +6,7 @@ variable "environment" {
 variable "vpc_id" {
   description = "The ID of the VPC where the compute resources will be deployed."
   type        = string
-  
+
 }
 
 variable "cluster_name" {
