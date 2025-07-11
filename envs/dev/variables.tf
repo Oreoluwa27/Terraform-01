@@ -71,8 +71,3 @@ variable "dev_web_ingress_cidrs" {
   type        = list(string)
 }
 
-variable "default_tags" {
-  description = "A map of default tags to apply to all resources created by this module."
-  type        = map(string)
-  default     = {}
-}
