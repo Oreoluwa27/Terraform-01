@@ -47,5 +47,5 @@ output "cluster_vpc_id" {
 
 output "eks_admin_access_entry_arn" {
   description = "The ARN of the created EKS admin access entry (if any)."
-  value       = length(aws_eks_access_entry.admin) > 0 ? aws_eks_access_entry.admin[0].arn : null
+  value       = length(aws_eks_access_entry.admin) > 0 ? aws_eks_access_entry.admin[0].principal_arn : null
 }
