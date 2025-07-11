@@ -1,4 +1,4 @@
-name: Terraform Manual Deploy Using Committed .tfvars
+name: Terraform Manual Deploy 
 
 on:
   workflow_dispatch:
