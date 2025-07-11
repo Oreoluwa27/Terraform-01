@@ -130,18 +130,18 @@ resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSNetworkingPolicy" {
 resource "aws_iam_openid_connect_provider" "main" {
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [data.tls_certificate.eks_cluster_thumbprint.certificates[0].sha1_fingerprint]
-  url             = aws_eks_cluster.main.identity[0].oidc[0].issuer
+  url             = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
 
   tags = var.default_tags
 }
 
 data "tls_certificate" "eks_cluster_thumbprint" {
-  url = aws_eks_cluster.main.identity[0].oidc[0].issuer
+  url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
 }
 
 # EKS Addons - explicitly managed for version control and configuration
 resource "aws_eks_addon" "vpc_cni" {
-  cluster_name = aws_eks_cluster.main.name
+  cluster_name = aws_eks_cluster.cluster.name
   addon_name   = "vpc-cni"
   # Use exact version for control or lookup with data source
   addon_version = "v1.19.6-eksbuild.1"
@@ -151,7 +151,7 @@ resource "aws_eks_addon" "vpc_cni" {
 }
 
 resource "aws_eks_addon" "kube_proxy" {
-  cluster_name = aws_eks_cluster.main.name
+  cluster_name = aws_eks_cluster.cluster.name
   addon_name   = "kube-proxy"
   addon_version = "v1.33.0-eksbuild.2"
   resolve_conflicts_on_create = "OVERWRITE"
@@ -160,7 +160,7 @@ resource "aws_eks_addon" "kube_proxy" {
 }
 
 resource "aws_eks_addon" "coredns" {
-  cluster_name = aws_eks_cluster.main.name
+  cluster_name = aws_eks_cluster.cluster.name
   addon_name   = "coredns"
   addon_version = "v1.12.2-eksbuild.4"
   resolve_conflicts_on_create = "OVERWRITE"
@@ -171,7 +171,7 @@ resource "aws_eks_addon" "coredns" {
 # Example: Access Entry for an admin IAM Role
 resource "aws_eks_access_entry" "admin" {
   count        = length(var.admin_iam_role_arns) > 0 ? 1 : 0
-  cluster_name = aws_eks_cluster.main.name
+  cluster_name = aws_eks_cluster.cluster.name
   principal_arn = var.admin_iam_role_arns[0] # Assuming first ARN is for primary admin
   type         = "STANDARD" # Recommended for most IAM principals
 
@@ -180,7 +180,7 @@ resource "aws_eks_access_entry" "admin" {
 
 resource "aws_eks_access_policy_association" "admin_policy" {
   count        = length(var.admin_iam_role_arns) > 0 ? 1 : 0
-  cluster_name = aws_eks_cluster.main.name
+  cluster_name = aws_eks_cluster.cluster.name
   principal_arn = aws_eks_access_entry.admin[0].principal_arn
   policy_arn   = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy" # Broad admin policy
   access_scope {
