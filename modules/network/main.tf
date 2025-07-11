@@ -22,7 +22,7 @@ locals {
   public_subnets_config  = { for k, v in var.subnets : k => v if v.type == "public" }
   private_subnets_config = { for k, v in var.subnets : k => v if v.type == "private" }
   # Filter only the first public subnet to place NAT Gateway
-  first_public_subnet_id = length(aws_subnet.public) > 0 ? tolist(aws_subnet.public)[0].id : null
+  first_public_subnet_id = length(aws_subnet.public) > 0 ? values(aws_subnet.public)[0].id : null
 }
 
 resource "aws_subnet" "public" {
