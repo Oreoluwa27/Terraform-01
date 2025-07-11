@@ -34,7 +34,7 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -input=false -var-file="${{ github.event.inputs.environment }}.tfvars"
+        run: terraform plan -input=false -var-file="envs/${{ github.event.inputs.environment }}/${{ github.event.inputs.environment }}.tfvars"
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false -var-file="${{ github.event.inputs.environment }}.tfvars"
+        run: terraform apply -auto-approve -input=false -var-file="envs/${{ github.event.inputs.environment }}/${{ github.event.inputs.environment }}.tfvars"
