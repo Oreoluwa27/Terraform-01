@@ -5,10 +5,6 @@
 # Terraform plan files
 *.tfplan
 
-# Sensitive or environment-specific variable files
-terraform.tfvars
-*.tfvars.json
-
 # Output logs and crash reports
 crash.log
 *.log
@@ -34,8 +30,6 @@ terraform.tfstate.backup
 bootstrap/.terraform/
 bootstrap/.terraform.lock.hcl
 bootstrap/*.tfplan
-bootstrap/terraform.tfvars
-bootstrap/*.tfvars.json
 bootstrap/crash.log
 bootstrap/*.log
 bootstrap/terraform.tfstate
@@ -50,8 +44,6 @@ bootstrap/.DS_Store
 envs/dev/.terraform/
 envs/dev/.terraform.lock.hcl
 envs/dev/*.tfplan
-envs/dev/terraform.tfvars
-envs/dev/*.tfvars.json
 envs/dev/crash.log
 envs/dev/*.log
 envs/dev/terraform.tfstate
@@ -65,8 +57,6 @@ envs/dev/.DS_Store
 envs/prod/.terraform/
 envs/prod/.terraform.lock.hcl   
 envs/prod/*.tfplan
-envs/prod/terraform.tfvars
-envs/prod/*.tfvars.json
 envs/prod/crash.log
 envs/prod/*.log
 envs/prod/terraform.tfstate
