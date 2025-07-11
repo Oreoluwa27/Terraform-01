@@ -14,9 +14,9 @@ variable "subnets" {
   description = "A map defining the VPC subnets with their CIDR, type, and AZ."
   type = map(object({
     cidr_block              = string
-    type                    = string # "public" or "private"
+    type                    = string 
     availability_zone       = string
-    map_public_ip_on_launch = optional(bool, false) # For public subnets
+    map_public_ip_on_launch = optional(bool, false) 
   }))
 }
 

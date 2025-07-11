@@ -140,10 +140,9 @@ data "tls_certificate" "eks_cluster_thumbprint" {
 resource "aws_eks_addon" "vpc_cni" {
   cluster_name = aws_eks_cluster.cluster.name
   addon_name   = "vpc-cni"
-  # Use exact version for control or lookup with data source
   addon_version = "v1.19.6-eksbuild.1"
   resolve_conflicts_on_create = "OVERWRITE"
-  resolve_conflicts_on_update = "PRESERVE" # Important for upgrades
+  resolve_conflicts_on_update = "PRESERVE" 
   tags = var.default_tags
 }
 

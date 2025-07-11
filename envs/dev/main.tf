@@ -17,8 +17,7 @@ provider "aws" {
   region = "eu-north-1"
 }
 
-
-# 1. Call the Network Module for the Dev Environment
+#Network Module for the Dev Environment
 module "network" {
   source             = "../../modules/network"
   environment        = var.environment
@@ -26,16 +25,15 @@ module "network" {
   subnets            = var.subnets
   create_nat_gateway = var.create_nat_gateway
 
-  # Ingress rules for dev can be more permissive for easier testing
   ssh_ingress_cidrs = var.dev_ssh_ingress_cidrs
   web_ingress_cidrs = var.dev_web_ingress_cidrs
 
   default_tags = var.default_tags
 }
 
-# 2. Call the Compute Module for the Dev Environment
+#Compute Module for the Dev Environment
 module "compute" {
-  source              = "../../modules/compute" # Path to your compute module
+  source              = "../../modules/compute" 
   environment         = var.environment
   cluster_name        = var.cluster_name
   kubernetes_version  = var.kubernetes_version
@@ -49,3 +47,15 @@ module "compute" {
   default_tags = var.default_tags
 }
 
+#temporary database instance for dev environment
+resource "aws_db_instance" "default" {
+  allocated_storage    = 10
+  db_name              = "mydb"
+  engine               = "mysql"
+  engine_version       = "8.0"
+  instance_class       = "db.t3.micro"
+  username             = "admin"
+  password             = "Adminpassword2004!"
+  parameter_group_name = "default.mysql8.0"
+  skip_final_snapshot  = true
+}

@@ -158,7 +158,7 @@ resource "aws_security_group_rule" "all_egress" {
   type              = "egress"
   from_port         = 0
   to_port           = 0
-  protocol          = "-1" # -1 means all protocols
+  protocol          = "-1" 
   cidr_blocks       = ["0.0.0.0/0"] # Allow all outbound IPv4 traffic to internet
   description       = "Allow all outbound traffic"
   security_group_id = aws_security_group.default.id
