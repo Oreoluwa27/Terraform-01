@@ -184,3 +184,65 @@ resource "aws_eks_access_policy_association" "admin_policy" {
   }
 }
 
+#CSI driver definition
+
+# IAM Role for EBS CSI Driver Service Account
+resource "aws_iam_role" "ebs_csi_driver" {
+  name = "${var.environment}-${var.cluster_name}-ebs-csi-driver-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          # This assumes your EKS cluster's OIDC provider is configured and available
+          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${replace(aws_eks_cluster.cluster.identity[0].oidc[0].issuer, "https://", "")}"
+        }
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Condition = {
+          StringEquals = {
+            # The service account that the EBS CSI driver addon runs as
+            "${replace(aws_eks_cluster.cluster.identity[0].oidc[0].issuer, "https://", "")}:sub": "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+          }
+        }
+      }
+    ]
+  })
+
+  tags = var.default_tags
+}
+
+# AWS Managed Policy for EBS CSI Driver
+resource "aws_iam_role_policy_attachment" "ebs_csi_driver_policy" {
+  # This is the AWS managed policy for the EBS CSI driver
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  role       = aws_iam_role.ebs_csi_driver.name
+}
+
+# Data source to get current AWS account ID (needed for ARN construction)
+data "aws_caller_identity" "current" {}
+
+# Data source to get compatible EBS CSI Driver addon version
+data "aws_eks_addon_version" "ebs_csi_driver" {
+  addon_name         = "aws-ebs-csi-driver"
+  kubernetes_version = aws_eks_cluster.cluster.version
+}
+
+resource "aws_eks_addon" "ebs_csi_driver" {
+  cluster_name                = aws_eks_cluster.cluster.name
+  addon_name                  = "aws-ebs-csi-driver"
+  addon_version               = data.aws_eks_addon_version.ebs_csi_driver.version
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "PRESERVE"
+  # This is crucial: link the addon to the IAM role for IRSA
+  service_account_role_arn    = aws_iam_role.ebs_csi_driver.arn
+
+  tags = var.default_tags
+
+  depends_on = [
+    aws_iam_role_policy_attachment.ebs_csi_driver_policy,
+    # Ensure OIDC provider is created before the addon attempts to use the role's trust policy
+    aws_iam_openid_connect_provider.main,
+  ]
+}
