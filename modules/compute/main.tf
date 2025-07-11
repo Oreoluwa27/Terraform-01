@@ -39,9 +39,7 @@ resource "aws_eks_cluster" "cluster" {
   tags = merge(var.default_tags, {
     Name = var.cluster_name
   })
-  # Ensure that IAM Role permissions are created before and deleted
-  # after EKS Cluster handling. Otherwise, EKS will not be able to
-  # properly delete EKS managed EC2 infrastructure such as Security Groups.
+  
   depends_on = [
     aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
     aws_iam_role_policy_attachment.cluster_AmazonEKSComputePolicy,
@@ -139,7 +137,6 @@ data "tls_certificate" "eks_cluster_thumbprint" {
   url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
 }
 
-# EKS Addons - explicitly managed for version control and configuration
 resource "aws_eks_addon" "vpc_cni" {
   cluster_name = aws_eks_cluster.cluster.name
   addon_name   = "vpc-cni"
@@ -168,21 +165,21 @@ resource "aws_eks_addon" "coredns" {
   tags = var.default_tags
 }
 
-# Example: Access Entry for an admin IAM Role
 resource "aws_eks_access_entry" "admin" {
-  count        = length(var.admin_iam_role_arns) > 0 ? 1 : 0
+  for_each     = toset(var.admin_iam_role_arns)
   cluster_name = aws_eks_cluster.cluster.name
-  principal_arn = var.admin_iam_role_arns[0] # Assuming first ARN is for primary admin
-  type         = "STANDARD" # Recommended for most IAM principals
+  principal_arn = each.value
+  type          = "STANDARD"
 
   tags = var.default_tags
 }
 
 resource "aws_eks_access_policy_association" "admin_policy" {
-  count        = length(var.admin_iam_role_arns) > 0 ? 1 : 0
+  for_each     = toset(var.admin_iam_role_arns)
   cluster_name = aws_eks_cluster.cluster.name
-  principal_arn = aws_eks_access_entry.admin[0].principal_arn
-  policy_arn   = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy" # Broad admin policy
+  principal_arn = aws_eks_access_entry.admin[each.key].principal_arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
   access_scope {
     type = "cluster"
   }
