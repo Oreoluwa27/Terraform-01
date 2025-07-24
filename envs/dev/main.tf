@@ -39,10 +39,10 @@ module "compute" {
   kubernetes_version  = var.kubernetes_version
   admin_iam_role_arns = var.admin_iam_role_arns
   vpc_id              = module.network.vpc_id
-  subnet_ids          = values(module.network.public_subnet_ids)
 
-
-  security_group_ids = [module.network.default_security_group_id]
+  subnet_CP_ids       = values(module.network.private_subnet_ids)
+  subnet_NG_ids       = values(module.network.private_subnet_ids)
+  subnet_proxy_id     = values(module.network.public_subnet_ids)
 
   default_tags = var.default_tags
 }
@@ -60,3 +60,4 @@ resource "aws_db_instance" "default" {
   skip_final_snapshot  = true
   publicly_accessible = true
 }
+

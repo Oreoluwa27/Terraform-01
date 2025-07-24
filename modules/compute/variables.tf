@@ -17,9 +17,20 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "subnet_ids" {
-  description = "A list of subnet IDs to deploy instances into."
-  type        = list(string)
+variable "subnet_CP_ids" {
+  description = "A list of subnet IDs for the control plane."
+  type        = list(string) 
+}
+
+variable "subnet_NG_ids" {
+  description = "A list of subnet IDs for the node group."
+  type        = list(string)  
+  
+}
+
+variable "subnet_proxy_id" {
+  description = "The ID of the subnet for the reverse proxy."
+  type        = string
 }
 
 variable "kubernetes_version" {
