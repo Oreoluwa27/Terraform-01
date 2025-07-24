@@ -28,9 +28,9 @@ variable "subnet_NG_ids" {
   
 }
 
-variable "subnet_proxy_id" {
+variable "subnet_proxy_ids" {
   description = "The ID of the subnet for the reverse proxy."
-  type        = string
+  type        = list(string)
 }
 
 variable "kubernetes_version" {

@@ -15,11 +15,11 @@ subnets = {
     availability_zone       = "eu-north-1a"
     map_public_ip_on_launch = true
   },
-  "public-osiris-b" = {
+  "private-osiris-a" = {
     cidr_block              = "10.61.2.0/24"
-    type                    = "public"
+    type                    = "private"
     availability_zone       = "eu-north-1b"
-    map_public_ip_on_launch = true
+    map_public_ip_on_launch = false
   },
 }
 create_nat_gateway = false

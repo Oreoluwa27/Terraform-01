@@ -367,16 +367,17 @@ resource "aws_security_group" "reverse_proxy" {
 
 # Reverse Proxy EC2 Instance
 resource "aws_instance" "reverse_proxy" {
+  for_each = toset(var.subnet_proxy_ids) 
+
   ami                    = "ami-0437df53acb2bbbfd"
   instance_type          = "t3.micro"
-  subnet_id              = var.subnet_proxy_id
+  subnet_id              = each.value
   vpc_security_group_ids = [aws_security_group.reverse_proxy.id]
   key_name               = "home-lab-2"
-
   associate_public_ip_address = true
 
   tags = merge(var.default_tags, {
-    Name = "${var.environment}-reverse-proxy"
+    Name = "${var.environment}-reverse-proxy-${each.key}"
   })
 
   lifecycle {

@@ -42,7 +42,7 @@ module "compute" {
 
   subnet_CP_ids       = values(module.network.private_subnet_ids)
   subnet_NG_ids       = values(module.network.private_subnet_ids)
-  subnet_proxy_id     = values(module.network.public_subnet_ids)
+  subnet_proxy_ids     = values(module.network.public_subnet_ids)
 
   default_tags = var.default_tags
 }
