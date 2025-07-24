@@ -320,14 +320,14 @@ resource "aws_eks_node_group" "general_purpose" {
   }
 
   labels = {
-    "kubernetes.io/cluster-autoscaler/enabled" : "true"
-    "kubernetes.io/cluster-autoscaler/${var.cluster_name}" : "true"
-    "node.kubernetes.io/lifecycle" : "on-demand"
+    "lifecycle" = "on-demand"
   }
 
   tags = merge(var.default_tags, {
-    Name                = "${var.environment}-${var.cluster_name}-general-purpose-ng"
-    "eks:cluster-name"  = var.cluster_name
+    Name                                          = "${var.environment}-${var.cluster_name}-general-purpose-ng"
+    "eks:cluster-name"                            = var.cluster_name
+    "k8s.io/cluster-autoscaler/enabled"           = "true"
+    "k8s.io/cluster-autoscaler/${var.cluster_name}" = "true"
   })
 
   depends_on = [
@@ -339,6 +339,7 @@ resource "aws_eks_node_group" "general_purpose" {
     aws_security_group.eks_nodes
   ]
 }
+
 
 # Security Group for Reverse Proxy
 resource "aws_security_group" "reverse_proxy" {
