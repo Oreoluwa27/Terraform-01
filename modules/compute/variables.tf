@@ -38,11 +38,6 @@ variable "kubernetes_version" {
   type        = string
 }
 
-variable "security_group_ids" {
-  description = "A list of security group IDs to attach to the instances."
-  type        = list(string)
-}
-
 variable "admin_iam_role_arns" {
   description = "A list of IAM Role ARNs that should be granted cluster-admin access via EKS Access Entries. Max 1 for simplicity in this example."
   type        = list(string)

@@ -340,25 +340,7 @@ resource "aws_eks_node_group" "general_purpose" {
   ]
 }
 
-# Reverse Proxy EC2 Instance
-resource "aws_instance" "reverse_proxy" {
-  ami                    = "ami-0437df53acb2bbbfd"
-  instance_type          = "t3.micro"
-  subnet_id              = var.subnet_proxy_id
-  vpc_security_group_ids = [aws_security_group.reverse_proxy.id]
-  key_name               = "home-lab-2"
-
-  associate_public_ip_address = true
-
-  tags = merge(var.default_tags, {
-    Name = "${var.environment}-reverse-proxy"
-  })
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
+# Security Group for Reverse Proxy
 resource "aws_security_group" "reverse_proxy" {
   name        = "${var.environment}-reverse-proxy-sg"
   description = "Security group for public EC2 reverse proxy"
@@ -382,4 +364,25 @@ resource "aws_security_group" "reverse_proxy" {
 
   tags = var.default_tags
 }
+
+# Reverse Proxy EC2 Instance
+resource "aws_instance" "reverse_proxy" {
+  ami                    = "ami-0437df53acb2bbbfd"
+  instance_type          = "t3.micro"
+  subnet_id              = var.subnet_proxy_id
+  vpc_security_group_ids = [aws_security_group.reverse_proxy.id]
+  key_name               = "home-lab-2"
+
+  associate_public_ip_address = true
+
+  tags = merge(var.default_tags, {
+    Name = "${var.environment}-reverse-proxy"
+  })
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
 
