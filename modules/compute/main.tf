@@ -28,7 +28,7 @@ resource "aws_eks_cluster" "cluster" {
   vpc_config {
     endpoint_private_access = true
     endpoint_public_access  = true
-
+    security_group_ids = [aws_security_group.eks_nodes.id]
     subnet_ids = var.subnet_CP_ids
   }
   tags = merge(var.default_tags, {
