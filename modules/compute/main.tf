@@ -15,16 +15,16 @@ resource "aws_eks_cluster" "cluster" {
   #   node_pools    = ["general-purpose"]
   #   node_role_arn = aws_iam_role.node.arn
   # }
-  kubernetes_network_config {
-    elastic_load_balancing {
-      enabled = false
-    }
-  }
-  storage_config {
-    block_storage {
-      enabled = false
-    }
-  }
+  # kubernetes_network_config {
+  #   elastic_load_balancing {
+  #     enabled = false
+  #   }
+  # }
+  # storage_config {
+  #   block_storage {
+  #     enabled = false
+  #   }
+  # }
   vpc_config {
     endpoint_private_access = true
     endpoint_public_access  = true
