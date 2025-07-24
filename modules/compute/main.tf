@@ -61,8 +61,8 @@ resource "aws_iam_role" "node" {
 }
 
 # Attach necessary policies to the EKS Node Role
-resource "aws_iam_role_policy_attachment" "node_AmazonEKSWorkerNodeMinimalPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodeMinimalPolicy"
+resource "aws_iam_role_policy_attachment" "node_AmazonEKSWorkerNodePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
   role       = aws_iam_role.node.name
 }
 resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryPullOnly" {
@@ -332,7 +332,7 @@ resource "aws_eks_node_group" "general_purpose" {
 
   depends_on = [
     aws_eks_cluster.cluster,
-    aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodeMinimalPolicy,
+    aws_iam_role_policy_attachment.node_AmazonEKSWorkerNodePolicy,
     aws_iam_role_policy_attachment.node_AmazonEC2ContainerRegistryPullOnly,
     aws_iam_role_policy_attachment.node_AmazonEKS_CNI_Policy,
     aws_launch_template.eks_nodes_lt,
