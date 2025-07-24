@@ -41,7 +41,7 @@ module "compute" {
   vpc_id              = module.network.vpc_id
 
   subnet_CP_ids       = values(module.network.private_subnet_ids)
-  subnet_NG_ids       = values(module.network.private_subnet_ids)
+  subnet_NG_ids       = values(module.network.public_subnet_ids)
 
   subnet_proxy_ids = module.network.public_subnet_ids
 
