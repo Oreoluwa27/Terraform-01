@@ -29,8 +29,8 @@ variable "subnet_NG_ids" {
 }
 
 variable "subnet_proxy_ids" {
-  description = "The ID of the subnet for the reverse proxy."
-  type        = list(string)
+  type = map(string)
+  description = "Map of proxy subnet IDs keyed by availability zone or name"
 }
 
 variable "kubernetes_version" {

@@ -367,13 +367,13 @@ resource "aws_security_group" "reverse_proxy" {
 
 # Reverse Proxy EC2 Instance
 resource "aws_instance" "reverse_proxy" {
-  for_each = toset(var.subnet_proxy_ids) 
+  for_each = var.subnet_proxy_ids
 
+  subnet_id              = each.value
   ami                    = "ami-0437df53acb2bbbfd"
   instance_type          = "t3.micro"
-  subnet_id              = each.value
-  vpc_security_group_ids = [aws_security_group.reverse_proxy.id]
   key_name               = "home-lab-2"
+  vpc_security_group_ids = [aws_security_group.reverse_proxy.id]
   associate_public_ip_address = true
 
   tags = merge(var.default_tags, {
@@ -384,6 +384,7 @@ resource "aws_instance" "reverse_proxy" {
     create_before_destroy = true
   }
 }
+
 
 
 
